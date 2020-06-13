@@ -1,36 +1,36 @@
 /*
 
-Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
+Given an array w of positive integers, where w[i] describes the weight of index i, write a function pickIndex which randomly picks an index in proportion to its weight.
 
-Note:
-The number of people is less than 1,100.
+For example, given an input list of values [1, 9], when we pick up a number out of it, the chance is that 9 times out of 10 we should pick the number 9 as the answer.
 
- 
-Example
+Example 1:
 
-Input:
-[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+Input: 
+["Solution","pickIndex"]
+[[[1]],[]]
+Output: [null,0]
+Example 2:
 
-Output:
-[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+Input: 
+["Solution","pickIndex","pickIndex","pickIndex","pickIndex","pickIndex"]
+[[[1,3]],[],[],[],[],[]]
+Output: [null,0,1,1,1,0]
 
 */
 class Solution {
 public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+    vector<int> prob;
+    Solution(vector<int>& w) {
         
-        sort(people.begin(),people.end(),[](vector<int>&v1, vector<int>&v2){
-            
-            if(v1[0]==v2[0])
-                return v1[1]<v2[1];
-            else
-                return v1[0]>v2[0];
-        } );
+         prob.push_back(w[0]);
+        for(int i=1;i<w.size();++i)
+            prob.push_back(prob[i-1]+w[i]);
+    }
+    
+    int pickIndex() {
         
-        vector<vector<int>>res;
-        for(int i=0;i<people.size();++i)
-            res.insert(res.begin()+people[i][1], people[i]);
-        
-        return res;
+        int num=rand()%prob.back()+1;
+        return lower_bound(prob.begin(), prob.end(), num)-prob.begin();
     }
 };
